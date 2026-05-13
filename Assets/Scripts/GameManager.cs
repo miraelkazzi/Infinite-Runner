@@ -14,13 +14,11 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
         Instance = this;
+
+        Time.timeScale = 1f;
+        IsGameOver = false;
+        Distance = 0f;
 
         if (config != null)
             ScrollSpeed = config.startSpeed;
@@ -55,6 +53,18 @@ public class GameManager : MonoBehaviour
 
     public void ReplayGame()
     {
+        if (losePanel != null)
+            losePanel.SetActive(false);
+
+        IsGameOver = false;
+        Time.timeScale = 1f;
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    void OnDestroy()
+    {
+        if (Instance == this)
+            Instance = null;
     }
 }
