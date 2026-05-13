@@ -512,9 +512,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Chunk
   length: 10
-  isJunction: 1
-  pivotOffset: {x: 0, y: 0, z: 0}
-  exitOffset: {x: 10, y: 0, z: 0}
+  entry: -1
+  exit: -1
 --- !u!1 &4775051331411208743
 GameObject:
   m_ObjectHideFlags: 0
