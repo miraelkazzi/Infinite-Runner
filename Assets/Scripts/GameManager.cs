@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -7,6 +8,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameConfig config;
     [SerializeField] private GameObject losePanel;
+
+    [Header("UI")]
+    [SerializeField] private TextMeshProUGUI distanceText;
+    [SerializeField] private TextMeshProUGUI finalDistanceText;
 
     public float ScrollSpeed { get; private set; }
     public float Distance { get; private set; }
@@ -25,6 +30,8 @@ public class GameManager : MonoBehaviour
 
         if (losePanel != null)
             losePanel.SetActive(false);
+
+        UpdateDistanceUI();
     }
 
     void Update()
@@ -38,6 +45,8 @@ public class GameManager : MonoBehaviour
         );
 
         Distance += ScrollSpeed * Time.deltaTime;
+
+        UpdateDistanceUI();
     }
 
     public void GameOver()
@@ -47,8 +56,26 @@ public class GameManager : MonoBehaviour
         IsGameOver = true;
         ScrollSpeed = 0f;
 
+        UpdateFinalDistanceUI();
+
         if (losePanel != null)
             losePanel.SetActive(true);
+    }
+
+    private void UpdateDistanceUI()
+    {
+        if (distanceText == null) return;
+
+        int distance = Mathf.FloorToInt(Distance);
+        distanceText.text = distance + " m";
+    }
+
+    private void UpdateFinalDistanceUI()
+    {
+        if (finalDistanceText == null) return;
+
+        int finalDistance = Mathf.FloorToInt(Distance);
+        finalDistanceText.text = "Distance: " + finalDistance + " m";
     }
 
     public void ReplayGame()
@@ -59,12 +86,17 @@ public class GameManager : MonoBehaviour
         IsGameOver = false;
         Time.timeScale = 1f;
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneManager.LoadScene("Main");
     }
 
-    void OnDestroy()
+    public void GoToMainMenu()
     {
-        if (Instance == this)
-            Instance = null;
+        if (losePanel != null)
+            losePanel.SetActive(false);
+
+        IsGameOver = false;
+        Time.timeScale = 1f;
+
+        SceneManager.LoadScene("MainMenu");
     }
 }
