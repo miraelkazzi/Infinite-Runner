@@ -71,19 +71,18 @@ public class PlayerController : MonoBehaviour
         transform.position = pos;
     }
 
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Obstacle"))
-        {
-            GameManager.Instance.GameOver();
-        }
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Obstacle"))
         {
             GameManager.Instance.GameOver();
+            return;
+        }
+
+        if (other.CompareTag("Coin"))
+        {
+            GameManager.Instance.AddCoin(1);
+            other.gameObject.SetActive(false);
         }
     }
 }

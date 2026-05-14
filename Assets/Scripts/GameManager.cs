@@ -12,9 +12,12 @@ public class GameManager : MonoBehaviour
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI distanceText;
     [SerializeField] private TextMeshProUGUI finalDistanceText;
+    [SerializeField] private TextMeshProUGUI coinsText;
+    [SerializeField] private TextMeshProUGUI finalCoinsText;
 
     public float ScrollSpeed { get; private set; }
     public float Distance { get; private set; }
+    public int Coins { get; private set; }
     public bool IsGameOver { get; private set; }
 
     void Awake()
@@ -24,6 +27,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
         IsGameOver = false;
         Distance = 0f;
+        Coins = 0;
 
         if (config != null)
             ScrollSpeed = config.startSpeed;
@@ -32,6 +36,7 @@ public class GameManager : MonoBehaviour
             losePanel.SetActive(false);
 
         UpdateDistanceUI();
+        UpdateCoinsUI();
     }
 
     void Update()
@@ -49,6 +54,12 @@ public class GameManager : MonoBehaviour
         UpdateDistanceUI();
     }
 
+    public void AddCoin(int amount)
+    {
+        Coins += amount;
+        UpdateCoinsUI();
+    }
+
     public void GameOver()
     {
         if (IsGameOver) return;
@@ -56,7 +67,7 @@ public class GameManager : MonoBehaviour
         IsGameOver = true;
         ScrollSpeed = 0f;
 
-        UpdateFinalDistanceUI();
+        UpdateFinalUI();
 
         if (losePanel != null)
             losePanel.SetActive(true);
@@ -70,12 +81,22 @@ public class GameManager : MonoBehaviour
         distanceText.text = distance + " m";
     }
 
-    private void UpdateFinalDistanceUI()
+    private void UpdateCoinsUI()
     {
-        if (finalDistanceText == null) return;
+        if (coinsText == null) return;
 
+        coinsText.text = Coins.ToString();
+    }
+
+    private void UpdateFinalUI()
+    {
         int finalDistance = Mathf.FloorToInt(Distance);
-        finalDistanceText.text = "Distance: " + finalDistance + " m";
+
+        if (finalDistanceText != null)
+            finalDistanceText.text = "Distance: " + finalDistance + " m";
+
+        if (finalCoinsText != null)
+            finalCoinsText.text = "Coins: " + Coins;
     }
 
     public void ReplayGame()
