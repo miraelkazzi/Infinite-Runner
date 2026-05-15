@@ -6,19 +6,27 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    private const string HighScoreKey = "HighScore";
+
     [SerializeField] private GameConfig config;
+
+    [Header("Panels")]
     [SerializeField] private GameObject losePanel;
+    [SerializeField] private GameObject pausePanel;
 
     [Header("UI")]
     [SerializeField] private TextMeshProUGUI distanceText;
     [SerializeField] private TextMeshProUGUI finalDistanceText;
     [SerializeField] private TextMeshProUGUI coinsText;
     [SerializeField] private TextMeshProUGUI finalCoinsText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
+    [SerializeField] private TextMeshProUGUI finalHighScoreText;
 
     public float ScrollSpeed { get; private set; }
     public float Distance { get; private set; }
     public int Coins { get; private set; }
     public bool IsGameOver { get; private set; }
+    public bool IsPaused { get; private set; }
 
     void Awake()
     {
@@ -26,6 +34,7 @@ public class GameManager : MonoBehaviour
 
         Time.timeScale = 1f;
         IsGameOver = false;
+        IsPaused = false;
         Distance = 0f;
         Coins = 0;
 
@@ -35,13 +44,17 @@ public class GameManager : MonoBehaviour
         if (losePanel != null)
             losePanel.SetActive(false);
 
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
         UpdateDistanceUI();
         UpdateCoinsUI();
+        UpdateHighScoreUI();
     }
 
     void Update()
     {
-        if (IsGameOver) return;
+        if (IsGameOver || IsPaused) return;
         if (config == null) return;
 
         ScrollSpeed = Mathf.Min(
@@ -56,6 +69,8 @@ public class GameManager : MonoBehaviour
 
     public void AddCoin(int amount)
     {
+        if (IsGameOver || IsPaused) return;
+
         Coins += amount;
         UpdateCoinsUI();
     }
@@ -65,12 +80,31 @@ public class GameManager : MonoBehaviour
         if (IsGameOver) return;
 
         IsGameOver = true;
+        IsPaused = false;
         ScrollSpeed = 0f;
+        Time.timeScale = 1f;
 
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
+        CheckHighScore();
         UpdateFinalUI();
+        UpdateHighScoreUI();
 
         if (losePanel != null)
             losePanel.SetActive(true);
+    }
+
+    private void CheckHighScore()
+    {
+        int finalDistance = Mathf.FloorToInt(Distance);
+        int currentHighScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+
+        if (finalDistance > currentHighScore)
+        {
+            PlayerPrefs.SetInt(HighScoreKey, finalDistance);
+            PlayerPrefs.Save();
+        }
     }
 
     private void UpdateDistanceUI()
@@ -88,15 +122,53 @@ public class GameManager : MonoBehaviour
         coinsText.text = Coins.ToString();
     }
 
+    private void UpdateHighScoreUI()
+    {
+        if (highScoreText == null) return;
+
+        if (!PlayerPrefs.HasKey(HighScoreKey))
+        {
+            highScoreText.gameObject.SetActive(false);
+            return;
+        }
+
+        highScoreText.gameObject.SetActive(true);
+        highScoreText.text = "Best: " + PlayerPrefs.GetInt(HighScoreKey) + " m";
+    }
+
     private void UpdateFinalUI()
     {
         int finalDistance = Mathf.FloorToInt(Distance);
+        int highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
 
         if (finalDistanceText != null)
-            finalDistanceText.text = "Distance: " + finalDistance + " m";
+            finalDistanceText.text = "d = " + finalDistance + " m";
 
         if (finalCoinsText != null)
-            finalCoinsText.text = "Coins: " + Coins;
+            finalCoinsText.text = Coins.ToString();
+
+        if (finalHighScoreText != null)
+            finalHighScoreText.text = "Highest Score: " + highScore + " m";
+    }
+
+    public void PauseGame()
+    {
+        if (IsGameOver) return;
+
+        IsPaused = true;
+        Time.timeScale = 0f;
+
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
+    }
+
+    public void ResumeGame()
+    {
+        IsPaused = false;
+        Time.timeScale = 1f;
+
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
     }
 
     public void ReplayGame()
@@ -104,7 +176,11 @@ public class GameManager : MonoBehaviour
         if (losePanel != null)
             losePanel.SetActive(false);
 
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
         IsGameOver = false;
+        IsPaused = false;
         Time.timeScale = 1f;
 
         SceneManager.LoadScene("Main");
@@ -115,7 +191,11 @@ public class GameManager : MonoBehaviour
         if (losePanel != null)
             losePanel.SetActive(false);
 
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+
         IsGameOver = false;
+        IsPaused = false;
         Time.timeScale = 1f;
 
         SceneManager.LoadScene("MainMenu");
