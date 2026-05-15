@@ -73,6 +73,9 @@ public class GameManager : MonoBehaviour
 
         Coins += amount;
         UpdateCoinsUI();
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayCoinPickup();
     }
 
     public void GameOver()
@@ -90,6 +93,9 @@ public class GameManager : MonoBehaviour
         CheckHighScore();
         UpdateFinalUI();
         UpdateHighScoreUI();
+
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayGameLose();
 
         if (losePanel != null)
             losePanel.SetActive(true);
@@ -153,6 +159,8 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
+        PlayButtonSound();
+
         if (IsGameOver) return;
 
         IsPaused = true;
@@ -164,6 +172,8 @@ public class GameManager : MonoBehaviour
 
     public void ResumeGame()
     {
+        PlayButtonSound();
+
         IsPaused = false;
         Time.timeScale = 1f;
 
@@ -173,6 +183,8 @@ public class GameManager : MonoBehaviour
 
     public void ReplayGame()
     {
+        PlayButtonSound();
+
         if (losePanel != null)
             losePanel.SetActive(false);
 
@@ -188,6 +200,8 @@ public class GameManager : MonoBehaviour
 
     public void GoToMainMenu()
     {
+        PlayButtonSound();
+
         if (losePanel != null)
             losePanel.SetActive(false);
 
@@ -199,5 +213,11 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1f;
 
         SceneManager.LoadScene("MainMenu");
+    }
+
+    private void PlayButtonSound()
+    {
+        if (SoundManager.Instance != null)
+            SoundManager.Instance.PlayButtonClick();
     }
 }

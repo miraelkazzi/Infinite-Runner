@@ -82,6 +82,10 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Coin"))
         {
             GameManager.Instance.AddCoin(1);
+
+            if (SoundManager.Instance != null)
+                SoundManager.Instance.PlayCoinPickup();
+
             other.gameObject.SetActive(false);
         }
     }

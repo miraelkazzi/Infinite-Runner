@@ -661,6 +661,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHover
   hoverScale: 1.1
   speed: 10
+--- !u!1 &823335170
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 823335172}
+  - component: {fileID: 823335171}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &823335171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823335170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 55047ae40db890f46a13f5184659bec5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SoundManager
+  backgroundMusic: {fileID: 8300000, guid: 26b7fba964c1b3d4f8fff763fe0fda98, type: 3}
+  buttonClickSound: {fileID: 8300000, guid: c3086affcc1b8b6408b3ac14e149cbed, type: 3}
+  coinPickupSound: {fileID: 8300000, guid: 3dd9223bec4a1374eb8e34ec4ceffba2, type: 3}
+  gameLoseSound: {fileID: 8300000, guid: 0b1ee1d16f1cb0f478c2baffd5c58235, type: 3}
+  backgroundMusicVolume: 0.428
+  buttonClickVolume: 1.77
+  coinPickupVolume: 0.8
+  gameLoseVolume: 1
+--- !u!4 &823335172
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 823335170}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 203.25974, y: 0.00002, z: 10277.991}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &841307905
 GameObject:
   m_ObjectHideFlags: 0
@@ -2358,3 +2410,4 @@ SceneRoots:
   - {fileID: 1838133942}
   - {fileID: 2008974663}
   - {fileID: 689714465}
+  - {fileID: 823335172}
